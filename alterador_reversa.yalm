@@ -1,0 +1,131 @@
+# Maquina de Turing que invierte una cadena
+# Algoritmo: Copia simbolos al final uno por uno, marcandolos con X
+
+mt:
+  states: [q0, q1, q2, q3, q4, q5, qf]
+  input_alphabet: [a, b]
+  tape_alphabet: [a, b, X, B]
+  initial_state: q0
+  accept_states: [qf]
+
+  transitions:
+    # q0: Busca el primer simbolo no marcado
+    - state: q0
+      read: [X]
+      write: [X]
+      move: R
+      next: q0
+
+    - state: q0
+      read: [a]
+      write: [X]
+      move: R
+      next: q1
+
+    - state: q0
+      read: [b]
+      write: [X]
+      move: R
+      next: q2
+
+    # Si encuentra blanco, termino de procesar, va a limpiar
+    - state: q0
+      read: [B]
+      write: [B]
+      move: L
+      next: q5
+
+    # q1: Memorizo 'a', busco el final para escribirla
+    - state: q1
+      read: [a]
+      write: [a]
+      move: R
+      next: q1
+
+    - state: q1
+      read: [b]
+      write: [b]
+      move: R
+      next: q1
+
+    - state: q1
+      read: [X]
+      write: [X]
+      move: R
+      next: q1
+
+    - state: q1
+      read: [B]
+      write: [a]
+      move: L
+      next: q3
+
+    # q2: Memorizo 'b', busco el final para escribirla
+    - state: q2
+      read: [a]
+      write: [a]
+      move: R
+      next: q2
+
+    - state: q2
+      read: [b]
+      write: [b]
+      move: R
+      next: q2
+
+    - state: q2
+      read: [X]
+      write: [X]
+      move: R
+      next: q2
+
+    - state: q2
+      read: [B]
+      write: [b]
+      move: L
+      next: q3
+
+    # q3: Regresa al inicio para procesar siguiente simbolo
+    - state: q3
+      read: [a]
+      write: [a]
+      move: L
+      next: q3
+
+    - state: q3
+      read: [b]
+      write: [b]
+      move: L
+      next: q3
+
+    - state: q3
+      read: [X]
+      write: [X]
+      move: L
+      next: q3
+
+    - state: q3
+      read: [B]
+      write: [B]
+      move: R
+      next: q0
+
+    # q5: Limpia las X del inicio
+    - state: q5
+      read: [X]
+      write: [B]
+      move: L
+      next: q5
+
+    - state: q5
+      read: [B]
+      write: [B]
+      move: R
+      next: qf
+
+# Cadenas de prueba
+inputs:
+  - "ababa"     # Resultado: ababa
+  - "aaaaa"     # Resultado: aaaaa
+  - "aabbbb"    # Resultado: bbbbaa
+  - "babaab"    # Resultado: baabab
