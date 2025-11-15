@@ -1,0 +1,111 @@
+# Maquina de Turing que reconoce el lenguaje L = {a^n b^n c^n | n >= 1}
+# Esta MT es más compleja que a^n b^n
+mt:
+  states: [q0, q1, q2, q3, q4, q5, q6, qf]
+  input_alphabet: [a, b, c]
+  tape_alphabet: [a, b, c, X, Y, Z, B]
+  initial_state: q0
+  accept_states: [qf]
+  transitions:
+    # Estado q0: marca la primera 'a' con 'X'
+    - state: q0
+      read: [a]
+      write: [X]
+      move: R
+      next: q1
+    # Estado q0: si encuentra 'Y', verifica que todo esté marcado
+    - state: q0
+      read: [Y]
+      write: [Y]
+      move: R
+      next: q5
+    # Estado q1: busca la primera 'b' no marcada
+    - state: q1
+      read: [a]
+      write: [a]
+      move: R
+      next: q1
+    - state: q1
+      read: [Y]
+      write: [Y]
+      move: R
+      next: q1
+    - state: q1
+      read: [b]
+      write: [Y]
+      move: R
+      next: q2
+    # Estado q2: busca la primera 'c' no marcada
+    - state: q2
+      read: [b]
+      write: [b]
+      move: R
+      next: q2
+    - state: q2
+      read: [Z]
+      write: [Z]
+      move: R
+      next: q2
+    - state: q2
+      read: [c]
+      write: [Z]
+      move: L
+      next: q3
+    # Estado q3: regresa al inicio
+    - state: q3
+      read: [b]
+      write: [b]
+      move: L
+      next: q3
+    - state: q3
+      read: [Z]
+      write: [Z]
+      move: L
+      next: q3
+    - state: q3
+      read: [Y]
+      write: [Y]
+      move: L
+      next: q3
+    - state: q3
+      read: [a]
+      write: [a]
+      move: L
+      next: q3
+    - state: q3
+      read: [X]
+      write: [X]
+      move: R
+      next: q0
+    # Estado q5: verifica que solo haya Y's y Z's
+    - state: q5
+      read: [Y]
+      write: [Y]
+      move: R
+      next: q5
+    - state: q5
+      read: [Z]
+      write: [Z]
+      move: R
+      next: q6
+    # Estado q6: verifica que solo haya Z's y blancos
+    - state: q6
+      read: [Z]
+      write: [Z]
+      move: R
+      next: q6
+    - state: q6
+      read: [B]
+      write: [B]
+      move: R
+      next: qf
+
+inputs:
+  - "aabbcc"      # ACEPTADA (longitud 6)
+  - "aaabbbccc"   # ACEPTADA (longitud 9)
+  - "abc"         # ACEPTADA (longitud 3)
+  - "aaaabbbbcccc" # ACEPTADA (longitud 12)
+  - "aabbc"       # RECHAZADA (longitud 5)
+  - "aabbccc"     # RECHAZADA (longitud 6)
+  - "abbc"        # RECHAZADA (longitud 4)
+  - "aabbcc"      # ACEPTADA (longitud 6)
