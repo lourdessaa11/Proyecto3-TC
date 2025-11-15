@@ -1,4 +1,3 @@
-
 class Transicion:
     """
     Representa una funcion de transicion de la MT
@@ -36,14 +35,16 @@ class Cinta:
         simbolo_blanco: simbolo que representa espacios vacios
         """
         self.simbolo_blanco = simbolo_blanco
-        # Convertimos la cadena en una lista para poder modificarla
-        self.cinta = list(cadena_inicial) if cadena_inicial else [simbolo_blanco]
+        if cadena_inicial:
+            self.cinta = list(cadena_inicial)
+        else:
+            self.cinta = []
+
         self.posicion_cabezal = 0
 
-        # Agregamos blancos al inicio y final para tener espacio
         self.cinta.insert(0, simbolo_blanco)
         self.cinta.append(simbolo_blanco)
-        self.posicion_cabezal = 1  # Ajustamos posicion inicial
+        self.posicion_cabezal = 1
 
     def leer(self):
         """
@@ -86,6 +87,7 @@ class Cinta:
         """
         Retorna la descripcion instantanea (ID) de la MT
         Formato: contenido_izquierda + estado + contenido_derecha
+
         """
         izquierda = ''.join(self.cinta[:self.posicion_cabezal])
         derecha = ''.join(self.cinta[self.posicion_cabezal:])
@@ -114,7 +116,7 @@ class MaquinaTuring:
     def agregar_transicion(self, transicion):
         """
         Agrega una transicion al conjunto de transiciones
-        La clave es (estado_actual, simbolo_leido)
+        (estado_actual, simbolo_leido)
         """
         clave = (transicion.estado_actual, transicion.simbolo_leido)
         self.transiciones[clave] = transicion
@@ -122,7 +124,6 @@ class MaquinaTuring:
     def buscar_transicion(self, estado, simbolo):
         """
         Busca una transicion aplicable dado un estado y simbolo
-        Retorna la transicion si existe, None si no
         """
         clave = (estado, simbolo)
         return self.transiciones.get(clave, None)
@@ -131,12 +132,13 @@ class MaquinaTuring:
         """
         Inicializa la cinta con una cadena de entrada
         """
-        # El simbolo blanco suele ser 'B' pero lo buscamos en el alfabeto
         simbolo_blanco = 'B'
         if 'B' in self.alfabeto_cinta:
             simbolo_blanco = 'B'
         elif '_' in self.alfabeto_cinta:
             simbolo_blanco = '_'
+        elif ' ' in self.alfabeto_cinta:
+            simbolo_blanco = ' '
 
         self.cinta = Cinta(cadena_entrada, simbolo_blanco)
         self.estado_actual = self.estado_inicial
