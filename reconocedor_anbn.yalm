@@ -1,13 +1,11 @@
 # Maquina de Turing que reconoce el lenguaje L = {a^n b^n | n >= 1}
 # Esta MT marca las 'a' y 'b' de izquierda a derecha verificando que haya igual cantidad
-
 mt:
-  states: [q0, q1, q2, q3, q4, qf, qr]
+  states: [q0, q1, q2, q3, qf]
   input_alphabet: [a, b]
   tape_alphabet: [a, b, X, Y, B]
   initial_state: q0
   accept_states: [qf]
-
   transitions:
     # Estado q0: busca la primera 'a' y la marca con 'X'
     - state: q0
@@ -15,69 +13,63 @@ mt:
       write: [X]
       move: R
       next: q1
-
     # Si en q0 encuentra 'Y', va a verificar que solo haya blancos
     - state: q0
       read: [Y]
       write: [Y]
       move: R
       next: q3
-
     # Estado q1: busca la 'b' correspondiente pasando por las 'a' y 'Y'
     - state: q1
       read: [a]
       write: [a]
       move: R
       next: q1
-
     - state: q1
       read: [Y]
       write: [Y]
       move: R
       next: q1
-
     - state: q1
       read: [b]
       write: [Y]
       move: L
       next: q2
-
     # Estado q2: regresa al inicio para buscar otra 'a'
     - state: q2
       read: [a]
       write: [a]
       move: L
       next: q2
-
     - state: q2
       read: [Y]
       write: [Y]
       move: L
       next: q2
-
     - state: q2
       read: [X]
       write: [X]
       move: R
       next: q0
-
     # Estado q3: verifica que solo haya blancos (todas marcadas)
+    - state: q3
+      read: [Y]
+      write: [Y]
+      move: R
+      next: q3
     - state: q3
       read: [B]
       write: [B]
       move: R
       next: qf
 
-    # Estado qf: estado de aceptacion (no necesita transiciones)
-
 # Cadenas de prueba
 inputs:
-  - "aabb"      # ACEPTADA
-  - "aaabbb"    # ACEPTADA
-  - "aaaabbbb"  # ACEPTADA
-  - "aaaaabbbbb" # ACEPTADA
-  - "ab"        # ACEPTADA
-  - "aab"       # RECHAZADA
-  - "abb"       # RECHAZADA
-  - "aaabb"     # RECHAZADA
-  - "aaabbbbb"  # RECHAZADA
+  - "aabb"        # ACEPTADA (longitud 4)
+  - "aaabbb"      # ACEPTADA (longitud 6)
+  - "aaaabbbb"    # ACEPTADA (longitud 8)
+  - "aaaaabbbbb"  # ACEPTADA (longitud 10)
+  - "aab"         # RECHAZADA (longitud 3) 
+  - "abb"         # RECHAZADA (longitud 3) 
+  - "aaabb"       # RECHAZADA (longitud 5) 
+  - "aaabbbbb"    # RECHAZADA (longitud 8) 
