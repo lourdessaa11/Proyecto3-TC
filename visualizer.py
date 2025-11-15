@@ -1,4 +1,3 @@
-
 class Visualizador:
     """
     Clase encargada de mostrar los resultados de la simulacion
@@ -33,7 +32,9 @@ class Visualizador:
         """
         print("FUNCIONES DE TRANSICION:")
         print("-" * 70)
-        for trans in transiciones.values():
+        trans_ordenadas = sorted(transiciones.values(),
+                                 key=lambda t: (t.estado_actual, t.simbolo_leido))
+        for trans in trans_ordenadas:
             print(f"  {trans}")
         print()
 
@@ -82,16 +83,29 @@ class Visualizador:
 
         aceptadas = 0
         rechazadas = 0
+        otros = 0
 
         for resultado in resultados:
             if resultado['resultado'] == "ACEPTADA":
                 aceptadas += 1
             elif resultado['resultado'] == "RECHAZADA":
                 rechazadas += 1
+            else:
+                otros += 1
 
         print(f"Total de cadenas simuladas: {len(resultados)}")
         print(f"Cadenas aceptadas: {aceptadas}")
         print(f"Cadenas rechazadas: {rechazadas}")
+        if otros > 0:
+            print(f"Otros resultados: {otros}")
+
+        print()
+        print("Detalle por cadena:")
+        print("-" * 70)
+        for i, resultado in enumerate(resultados, 1):
+            estado = "✓" if resultado['resultado'] == "ACEPTADA" else "✗"
+            print(f"{i}. '{resultado['cadena_entrada']}' -> {estado} {resultado['resultado']}")
+
         print("=" * 70)
         print()
 
